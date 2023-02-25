@@ -28,3 +28,10 @@ class Reservation(models.Model):
     
     def __str__(self):
         return f"Customer {self.customer} reserved {self.car}"
+    
+    class Meta:
+        constraints=[
+            models.UniqueConstraint(
+                fields=["customer","start_date","end_date"]
+            )
+        ]
