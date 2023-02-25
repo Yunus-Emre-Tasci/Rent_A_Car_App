@@ -32,6 +32,7 @@ class Reservation(models.Model):
     class Meta:
         constraints=[
             models.UniqueConstraint(
-                fields=["customer","start_date","end_date"]
+                fields=["customer","start_date","end_date"],
+                name="user_rent_date"
             )
         ]
