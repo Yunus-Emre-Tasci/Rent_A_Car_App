@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     
     #myapps
     "users",
+    "car",
     
     #third parth library
     "rest_framework",
