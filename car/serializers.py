@@ -26,6 +26,7 @@ class CarSerializer(serializers.ModelSerializer):
         return fields   
     
 class ReservationSerializer(serializers.ModelSerializer):
+    total_price=serializers.SerializerMethodField() #içerisine method_name= yazılırsa buradaki method_name e göre aşağıda fonksiyon tanımlayabiliriz.
     
     class Meta:
         model=Reservation
@@ -35,6 +36,7 @@ class ReservationSerializer(serializers.ModelSerializer):
             "car",
             "start_date",
             "end_date",
+            "total_price",
         )  
         
         validators=[  #gönderilen bütün datanın hepsini database e gelmeden kontrol ediyor.
@@ -44,3 +46,6 @@ class ReservationSerializer(serializers.ModelSerializer):
                 message=("You already have a reservation between these dates...")
             )
         ]  
+     
+    def get_total_price(self,obj):
+        return obj.car.rent_per_day * (obj.end_date-obj.start_date).days    
