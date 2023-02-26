@@ -1,13 +1,15 @@
 # from django.shortcuts import render
-from rest_framework.viewsets import ModelViewSet
 from .models import Car,Reservation
 from .serializers import CarSerializer,ReservationSerializer
 from .permissions import IsStaffOrReadOnly
+
 from rest_framework.generics import ListCreateAPIView,RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
 from django.db.models import Q  
+from django.utils import timezone
 
 # Create your views here.
 class CarView(ModelViewSet):
@@ -58,9 +60,10 @@ class ReservationDetailView(RetrieveUpdateDestroyAPIView):
         end=serializer.validated_data.get("end_date")
         car=serializer.validated_data.get("car")
         start=instance.start_date
+        today=timezone.now().date()
         
         if Reservation.objects.filter(car=car).exists():  #exists boolean değer dönüyor, var mı yok mu diye.
-            for res in Reservation.objects.filter(car=car):
+            for res in Reservation.objects.filter(car=car,end_date__gte=today):
                 if start < res.start_date < end:
                     return Response({"message": "Car is not available..."})
         
