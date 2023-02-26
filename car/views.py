@@ -57,10 +57,11 @@ class ReservationDetailView(RetrieveUpdateDestroyAPIView):
         serializer.is_valid(raise_exception=True)
         end=serializer.validated_data.get("end_date")
         car=serializer.validated_data.get("car")
+        start=instance.start_date
         
         if Reservation.objects.filter(car=car).exists():  #exists boolean değer dönüyor, var mı yok mu diye.
             for res in Reservation.objects.filter(car=car):
-                if res.start_date < end < res.end_date:
+                if start < res.start_date < end:
                     return Response({"message": "Car is not available..."})
         
         return super().update(request, *args, **kwargs)        
